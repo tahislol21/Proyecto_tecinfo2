@@ -1,0 +1,87 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #e0ffff, #ffffff); /* Fondo verde aqua claro desvanecido */
+    color: #333;
+}
+
+header {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 5px;
+    color: #008080; /* Texto verde aqua */
+}
+
+nav {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+}
+
+nav li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+#portada {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.contenido-portada {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contenido-portada img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 5px; /* Opcional: bordes redondeados para la imagen */
+}
+
+.contenido-portada h2 {
+    color: #008080;
+    margin-top: 20px;
+}
+
+.contenido-portada ul {
+    list-style: none;
+    padding: 0;
+}
+
+.contenido-portada li {
+    margin-bottom: 5px;
+}
+
+.contenido-portada button {
+    background-color: #008080;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.contenido-portada button:hover {
+    background-color: #006666;
+}
