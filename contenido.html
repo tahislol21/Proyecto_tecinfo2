@@ -3,43 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anfibios de México - Mapa Interactivo</title>
+    <title>Quiz de Anfibios</title>
     <link rel="stylesheet" href="contenido.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="main-header">
-        <h1>Anfibios de México</h1>
-        <p>Explora la diversidad de anfibios por estado.</p>
-    </header>
+    <div class="quiz-container">
+        <header class="quiz-header">
+            <h1>Descubre tu Conocimiento Anfibio</h1>
+            <p>¡Pon a prueba lo que sabes sobre estos fascinantes animales!</p>
+        </header>
 
-    <main class="container">
-        <section class="map-section">
-            <h2 class="section-title">Mapa de la República Mexicana</h2>
-            <div class="map-container">
-                <svg id="mexico-map" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
-                    <path id="state-BajaCalifornia" class="state-button" d="M100 100 L200 100 L200 200 L100 200 Z" data-state-name="Baja California"></path>
-                    <path id="state-Sonora" class="state-button" d="M250 100 L350 100 L350 200 L250 200 Z" data-state-name="Sonora"></path>
-                    <path id="state-Chihuahua" class="state-button" d="M400 100 L500 100 L500 200 L400 200 Z" data-state-name="Chihuahua"></path>
-                    <path id="state-Jalisco" class="state-button" d="M300 300 L400 300 L400 400 L300 400 Z" data-state-name="Jalisco"></path>
-                    <path id="state-CDMX" class="state-button" d="M500 450 L520 450 L520 470 L500 470 Z" data-state-name="Ciudad de México"></path>
-                    </svg>
-                <div id="tooltip" class="tooltip"></div>
+        <main class="quiz-main">
+            <div id="question-card" class="question-card">
+                <h2 id="question-text">Cargando pregunta...</h2>
+                <div class="options-container" id="options-container">
+                    </div>
+                <div class="navigation-buttons">
+                    <button id="prev-button" class="quiz-button hidden">Anterior</button>
+                    <button id="next-button" class="quiz-button">Siguiente</button>
+                    <button id="submit-button" class="quiz-button hidden">Finalizar Quiz</button>
+                </div>
             </div>
-            <p class="map-instruction">Haz clic en un estado para ver los anfibios que lo habitan.</p>
-        </section>
 
-        <section class="info-section">
-            <h2 class="section-title" id="info-section-title">Información de Anfibios</h2>
-            <div id="amphibian-info-container" class="amphibian-cards-grid">
-                <p class="initial-message">Selecciona un estado en el mapa para ver la información de anfibios.</p>
+            <div id="results-card" class="results-card hidden">
+                <h2>¡Quiz Completado!</h2>
+                <p>Tu puntuación final es: <span id="final-score">0</span> de <span id="total-questions">0</span></p>
+                <div class="score-details">
+                    </div>
+                <button id="restart-button" class="quiz-button">Reiniciar Quiz</button>
             </div>
-        </section>
-    </main>
+        </main>
 
-    <footer class="main-footer">
-        <p>&copy; 2025 Explorador de Anfibios de México. Todos los derechos reservados.</p>
-    </footer>
+        <footer class="quiz-footer">
+            <p>&copy; 2025 Quiz de Anfibios. ¡Aprende y diviértete!</p>
+        </footer>
+    </div>
 
     <script src="contenido.js"></script>
 </body>
