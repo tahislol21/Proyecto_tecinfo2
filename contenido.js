@@ -1,139 +1,180 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const mexicoMap = document.getElementById('mexico-map');
-    const amphibianInfoContainer = document.getElementById('amphibian-info-container');
-    const infoSectionTitle = document.getElementById('info-section-title');
-    const tooltip = document.getElementById('tooltip');
-
-    // Datos de ejemplo de anfibios por estado
-    // En una aplicación real, esto podría venir de una API o una base de datos
-    const stateAmphibians = {
-        "Baja California": [
-            {
-                name: "Rana de Baja California",
-                scientificName: "Lithobates catesbeianus",
-                specimens: "Común",
-                image: "https://via.placeholder.com/300x200/A7D9D2/2C3E50?text=Rana+BC"
+    const questions = [
+        {
+            question: "¿Qué característica distingue a los anfibios de los reptiles?",
+            options: {
+                A: "Los anfibios tienen escamas y los reptiles no.",
+                B: "Los anfibios pueden vivir tanto en agua como en tierra, y los reptiles son terrestres.",
+                C: "Los anfibios son de sangre caliente y los reptiles de sangre fría."
             },
-            {
-                name: "Salamandra de Ensenada",
-                scientificName: "Ensatina eschscholtzii",
-                specimens: "Poco común",
-                image: "https://via.placeholder.com/300x200/C0E8D7/2C3E50?text=Salamandra+Ens"
-            }
-        ],
-        "Sonora": [
-            {
-                name: "Sapo Sonorense",
-                scientificName: "Incilius alvarius",
-                specimens: "Abundante",
-                image: "https://via.placeholder.com/300x200/A7D9D2/2C3E50?text=Sapo+Sonora"
-            }
-        ],
-        "Chihuahua": [
-            {
-                name: "Rana Leopardos de Chihuahua",
-                scientificName: "Lithobates chiricahuensis",
-                specimens: "En peligro",
-                image: "https://via.placeholder.com/300x200/C0E8D7/2C3E50?text=Rana+Chihuahua"
+            correctAnswer: "B"
+        },
+        {
+            question: "¿Cuál es el proceso de transformación que experimentan muchos anfibios, como las ranas, desde la fase larval hasta la adulta?",
+            options: {
+                A: "Fecundación",
+                B: "Metamorfosis",
+                C: "Hibernación"
             },
-            {
-                name: "Ajolote de Montaña",
-                scientificName: "Ambystoma leorae",
-                specimens: "Críticamente amenazado",
-                image: "https://via.placeholder.com/300x200/A7D9D2/2C3E50?text=Ajolote+Montaña"
-            }
-        ],
-        "Jalisco": [
-            {
-                name: "Rana de Árbol de Jalisco",
-                scientificName: "Dryophytes eximius",
-                specimens: "Común",
-                image: "https://via.placeholder.com/300x200/A7D9D2/2C3E50?text=Rana+Jalisco"
+            correctAnswer: "B"
+        },
+        {
+            question: "¿Qué tipo de piel suelen tener los anfibios?",
+            options: {
+                A: "Seca y escamosa",
+                B: "Húmeda y permeable",
+                C: "Con plumas"
             },
-            {
-                name: "Ajolote de Lago de Chapala",
-                scientificName: "Ambystoma dumerilii",
-                specimens: "En peligro",
-                image: "https://via.placeholder.com/300x200/C0E8D7/2C3E50?text=Ajolote+Chapala"
+            correctAnswer: "B"
+        },
+        {
+            question: "¿Qué grupo de anfibios es conocido por tener una cola durante toda su vida adulta?",
+            options: {
+                A: "Anuros (ranas y sapos)",
+                B: "Ápodos (cecilias)",
+                C: "Urodelos (salamandras y tritones)"
+            },
+            correctAnswer: "C"
+        },
+        {
+            question: "¿Cuál es la principal forma en que los anfibios respiran cuando son adultos?",
+            options: {
+                A: "Solo por branquias",
+                B: "Solo por pulmones",
+                C: "Por pulmones y a través de su piel"
+            },
+            correctAnswer: "C"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    const userAnswers = new Array(questions.length).fill(null); // Almacena las respuestas del usuario
+
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const submitButton = document.getElementById('submit-button');
+    const questionCard = document.getElementById('question-card');
+    const resultsCard = document.getElementById('results-card');
+    const finalScoreSpan = document.getElementById('final-score');
+    const totalQuestionsSpan = document.getElementById('total-questions');
+    const restartButton = document.getElementById('restart-button');
+    const scoreDetails = document.querySelector('.score-details');
+
+    function loadQuestion() {
+        const currentQuestion = questions[currentQuestionIndex];
+        questionText.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+        optionsContainer.innerHTML = ''; // Limpia opciones anteriores
+
+        // Crea los botones de opción
+        Object.keys(currentQuestion.options).forEach(key => {
+            const button = document.createElement('button');
+            button.classList.add('option-button');
+            button.textContent = `${key}) ${currentQuestion.options[key]}`;
+            button.dataset.option = key;
+            button.addEventListener('click', () => selectOption(button, key));
+            optionsContainer.appendChild(button);
+
+            // Si el usuario ya respondió esta pregunta, resalta su selección
+            if (userAnswers[currentQuestionIndex] === key) {
+                button.classList.add('selected');
             }
-        ],
-        "Ciudad de México": [
-            {
-                name: "Ajolote de Xochimilco",
-                scientificName: "Ambystoma mexicanum",
-                specimens: "Críticamente amenazado (silvestre)",
-                image: "https://via.placeholder.com/300x200/A7D9D2/2C3E50?text=Ajolote+CDMX"
-            }
-        ]
-        // Agrega más estados y sus anfibios aquí
-    };
+        });
 
-    // Event listeners para los botones de estado del mapa (paths SVG)
-    mexicoMap.addEventListener('click', (event) => {
-        const target = event.target;
-        if (target.classList.contains('state-button')) {
-            const stateName = target.dataset.stateName;
-
-            // Remover la clase 'active' de todos los estados
-            document.querySelectorAll('.state-button').forEach(button => {
-                button.classList.remove('active');
-            });
-
-            // Añadir la clase 'active' al estado clickeado
-            target.classList.add('active');
-
-            displayAmphibianInfo(stateName);
-        }
-    });
-
-    // Tooltip functionality
-    mexicoMap.addEventListener('mouseover', (event) => {
-        const target = event.target;
-        if (target.classList.contains('state-button')) {
-            const stateName = target.dataset.stateName;
-            tooltip.textContent = stateName;
-            tooltip.style.opacity = 1;
-            tooltip.style.left = `${event.clientX + 15}px`;
-            tooltip.style.top = `${event.clientY - 30}px`;
-        }
-    });
-
-    mexicoMap.addEventListener('mousemove', (event) => {
-        if (tooltip.style.opacity == 1) { // Only move if visible
-            tooltip.style.left = `${event.clientX + 15}px`;
-            tooltip.style.top = `${event.clientY - 30}px`;
-        }
-    });
-
-    mexicoMap.addEventListener('mouseout', (event) => {
-        if (event.target.classList.contains('state-button')) {
-            tooltip.style.opacity = 0;
-        }
-    });
-
-
-    function displayAmphibianInfo(stateName) {
-        const amphibians = stateAmphibians[stateName];
-        amphibianInfoContainer.innerHTML = ''; // Limpiar información anterior
-        infoSectionTitle.textContent = `Anfibios de ${stateName}`;
-
-        if (amphibians && amphibians.length > 0) {
-            amphibians.forEach(amphibian => {
-                const card = document.createElement('div');
-                card.classList.add('amphibian-card');
-
-                card.innerHTML = `
-                    <img src="${amphibian.image}" alt="${amphibian.name}">
-                    <h3>${amphibian.name}</h3>
-                    <p><strong>Nombre Científico:</strong> ${amphibian.scientificName}</p>
-                    <p><strong>Ejemplares:</strong> ${amphibian.specimens}</p>
-                `;
-                amphibianInfoContainer.appendChild(card);
-            });
-        } else {
-            amphibianInfoContainer.innerHTML = `
-                <p class="initial-message">No se encontró información de anfibios para ${stateName} o aún no se ha agregado.</p>
-            `;
-        }
+        updateNavigationButtons();
     }
+
+    function selectOption(selectedButton, option) {
+        // Deselecciona cualquier opción previa para esta pregunta
+        optionsContainer.querySelectorAll('.option-button').forEach(button => {
+            button.classList.remove('selected');
+        });
+
+        // Selecciona la nueva opción
+        selectedButton.classList.add('selected');
+        userAnswers[currentQuestionIndex] = option; // Guarda la respuesta del usuario
+    }
+
+    function updateNavigationButtons() {
+        prevButton.classList.toggle('hidden', currentQuestionIndex === 0);
+        nextButton.classList.toggle('hidden', currentQuestionIndex === questions.length - 1);
+        submitButton.classList.toggle('hidden', currentQuestionIndex !== questions.length - 1);
+
+        // Deshabilitar el botón "Siguiente" si no se ha seleccionado una opción
+        const selectedOption = userAnswers[currentQuestionIndex];
+        nextButton.disabled = !selectedOption && currentQuestionIndex < questions.length -1;
+    }
+
+    function showResults() {
+        score = 0;
+        scoreDetails.innerHTML = ''; // Limpiar detalles de puntuación anteriores
+
+        questions.forEach((question, index) => {
+            const userAnswer = userAnswers[index];
+            const isCorrect = userAnswer === question.correctAnswer;
+
+            const resultParagraph = document.createElement('p');
+            resultParagraph.classList.add('question-result');
+
+            if (isCorrect) {
+                score++;
+                resultParagraph.innerHTML = `<strong>Pregunta ${index + 1}:</strong> ${question.question}<br>
+                                             Tu respuesta: <span class="correct-answer">${userAnswer}) ${question.options[userAnswer]}</span> (Correcta)`;
+            } else {
+                resultParagraph.innerHTML = `<strong>Pregunta ${index + 1}:</strong> ${question.question}<br>
+                                             Tu respuesta: <span class="incorrect-answer">${userAnswer ? `${userAnswer}) ${question.options[userAnswer]}` : 'Sin respuesta'}</span><br>
+                                             Respuesta correcta: <span class="correct-answer">${question.correctAnswer}) ${question.options[question.correctAnswer]}</span>`;
+            }
+            scoreDetails.appendChild(resultParagraph);
+        });
+
+        finalScoreSpan.textContent = score;
+        totalQuestionsSpan.textContent = questions.length;
+
+        questionCard.classList.add('hidden');
+        resultsCard.classList.remove('hidden');
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        userAnswers.fill(null); // Reiniciar todas las respuestas
+        resultsCard.classList.add('hidden');
+        questionCard.classList.remove('hidden');
+        loadQuestion(); // Cargar la primera pregunta nuevamente
+    }
+
+    // Event Listeners
+    nextButton.addEventListener('click', () => {
+        if (userAnswers[currentQuestionIndex]) { // Solo avanzar si hay una respuesta seleccionada
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        } else {
+            alert('Por favor, selecciona una opción antes de avanzar.');
+        }
+    });
+
+    prevButton.addEventListener('click', () => {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            loadQuestion();
+        }
+    });
+
+    submitButton.addEventListener('click', () => {
+        if (userAnswers[currentQuestionIndex]) { // Asegurarse de que la última pregunta tenga una respuesta
+            showResults();
+        } else {
+            alert('Por favor, selecciona una opción antes de finalizar el quiz.');
+        }
+    });
+
+    restartButton.addEventListener('click', restartQuiz);
+
+    // Initial load
+    loadQuestion();
 });
