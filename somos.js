@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (boton) {
         boton.addEventListener('click', function() {
             // Reemplaza esta URL con el enlace real de tu presentación en Canva
-            const urlCanva = 'https://www.canva.com/design/DAF0_example/view?utm_content=DAF0_example&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink'; // ¡IMPORTANTE: Reemplazar con tu URL de Canva!
+            const urlCanva = 'https://www.canva.com/design/DAGpfUrACZM/4lsD8op3igLeaifXHUmXLw/view?utm_content=DAGpfUrACZM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h6897102e53'; // ¡IMPORTANTE: Reemplazar con tu URL de Canva!
             window.open(urlCanva, '_blank'); // Abre la URL en una nueva pestaña
         });
     } else {
